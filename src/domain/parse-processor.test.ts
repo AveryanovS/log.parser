@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import {
-    anything, deepEqual, instance, mock, when,
+    anything, instance, mock, when,
 } from 'ts-mockito';
 import {FilterUsecase, LinesHandlerFunction, LinesInput, ParseLineUsecase, ParseProcessor} from './parse-processor';
 import {LogOutputService} from "./ports/out/log-output.service";
@@ -44,6 +44,8 @@ const mockedDto:LogDto  = {
     code: 404,
     err: 'error'
 }
+const mockedLine = '2021-08-09T02:12:51.253Z - info - {"transactionId":"9abc55b2-807b-4361-9dbe-aa88b1b2e978","details":"Service is started"}';
+
 describe('Login usecase', () => {
     const filterUsecase = mock<FilterUsecase>();
     const parseLineUsecase = mock<ParseLineUsecase>();
@@ -51,6 +53,7 @@ describe('Login usecase', () => {
 
     when(filterUsecase.exec(anything())).thenReturn(true);
     when(parseLineUsecase.exec(anything())).thenReturn(mockedDto);
+
     const processor = new ParseProcessor<string>(
         instance(filterUsecase),
         instance(parseLineUsecase),
@@ -59,9 +62,12 @@ describe('Login usecase', () => {
 
     const mockInput = new MockInput();
 
-    describe('Happy path, empty logs', () => {
+    describe('Happy path', () => {
         it('Just works', async () => {
             const promise = processor.parse(mockInput, 'mock');
+            mockInput.mockLine(mockedLine);
+            mockInput.mockLine(mockedLine);
+            mockInput.mockLine(mockedLine);
             mockInput.mockEnd();
             const result = await promise;
             expect(result).toEqual(0);
