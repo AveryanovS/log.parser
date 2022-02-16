@@ -5,7 +5,7 @@
   "main": "parser.js",
   "scripts": {
     "test": "jest",
-    "dev": "ts-node ./src/parser.ts --input=./input.log --output=./output.json",
+    "dev": "ts-node ./src/parser.ts --input=./data/input.log --output=./data/output.json",
     "build": "tsc"
   },
   "author": "AveryanovS",
