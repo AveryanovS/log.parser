@@ -8,8 +8,9 @@ export class ParseLineUsecaseImpl implements ParseLineUsecase {
         const match = line.match(/(.*?)\s-\s(.*?)\s-\s(.*?){\"(.*?)}/g);
         if(!match)
             throw new Error('Incorrect line');
-        const [timestamp, level, data] = line.split(' - ');
-        const parsedData = JSON.parse(data);
+
+        const [timestamp, level, ...data] = line.split(' - ');
+        const parsedData = JSON.parse(data.join(' - '));
         return {
             timestamp: new Date(timestamp).valueOf(),
             loglevel: level as LogLevelEnum,
